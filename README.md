@@ -1,4 +1,4 @@
-# Microservice Auth Sistem Akademik
+# Microservice Registrasi Mahasiswa Baru
 
 Anggota Tim Developer:
 * Jalaluddin Al Mursyidy Fadhlurrahman
