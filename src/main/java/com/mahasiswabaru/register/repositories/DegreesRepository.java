@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DegreesRepository extends JpaRepository<Degrees, Long> {
-    Degrees findDegreesById(Integer degreeId);
-    Degrees findDegreesByName(String degreeName);
+    Degrees findDegreesByIdAndDeletedAtIsNull(Integer degreeId);
+    Degrees findDegreesByNameAndDeletedAtIsNull(String degreeName);
 }
