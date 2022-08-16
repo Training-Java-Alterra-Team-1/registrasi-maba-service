@@ -48,4 +48,15 @@ public class DegreesService {
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(respon);
     }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Get degrees by Id")
+    public ResponseEntity<Object> getDegreeById(Integer degreeId){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Degrees degrees = degreesRepository.findDegreesById(degreeId);
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(degrees);
+    }
 }
