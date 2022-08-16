@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -35,5 +36,16 @@ public class DegreesService {
         degreesRepository.save(theDegree);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(theDegree);
+    }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Get all degrees")
+    public ResponseEntity<Object> getAllDegrees(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        List<Degrees> respon = degreesRepository.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(respon);
     }
 }
