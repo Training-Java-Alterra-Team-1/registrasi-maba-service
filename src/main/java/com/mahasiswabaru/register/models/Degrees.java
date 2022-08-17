@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name="Degrees")
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Degrees {
+public class Degrees extends Audit<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = false, unique = true)
@@ -22,13 +23,4 @@ public class Degrees {
 
     @Column(name = "name", nullable = false, insertable = true, length = 50)
     private String name;
-
-    @Column(name = "created_at", nullable = false, insertable = true)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = true, insertable = true)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 }

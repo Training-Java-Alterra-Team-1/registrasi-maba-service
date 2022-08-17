@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name="Majors")
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Majors {
+public class Majors extends Audit<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = false, unique = true)
@@ -34,13 +35,4 @@ public class Majors {
     @JoinColumn(name = "degree_id", nullable = false, insertable = true, referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Degrees degrees;
-
-    @Column(name = "created_at", nullable = false, insertable = true)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = true, insertable = true)
-    private LocalDateTime updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 }
