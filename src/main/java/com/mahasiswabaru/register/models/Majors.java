@@ -23,11 +23,11 @@ public class Majors extends Audit<String> implements Serializable {
     @Column(name = "name", nullable = false, insertable = true, length = 50)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false, insertable = true, referencedColumnName = "id")
     private Departments departments;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "degree_id", nullable = false, insertable = true, referencedColumnName = "id")
     private Degrees degrees;
 }

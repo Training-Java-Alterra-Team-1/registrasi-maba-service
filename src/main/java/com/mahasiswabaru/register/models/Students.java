@@ -36,7 +36,7 @@ public class Students extends Audit<String> implements Serializable {
     @Column(name = "address", nullable = true, insertable = true, length=512)
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "major_id", nullable = false, insertable = true, referencedColumnName = "id")
     private Majors majors;
 }
