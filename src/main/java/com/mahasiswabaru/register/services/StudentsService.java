@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -45,6 +46,17 @@ public class StudentsService {
         studentsRepository.save(students);
 
         return  ResponseEntity.status(HttpStatus.OK).headers(headers).body(studentReq);
+    }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Get all students")
+    public ResponseEntity<Object> getStudents(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        List<Students> resp = studentsRepository.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(resp);
     }
 
     @SneakyThrows(Exception.class)
