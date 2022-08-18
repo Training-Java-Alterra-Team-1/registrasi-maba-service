@@ -76,7 +76,7 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Students students = studentsRepository.findStudentsContainingName(studentName);
+        Students students = studentsRepository.findStudentsByName(studentName);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(students);
     }
