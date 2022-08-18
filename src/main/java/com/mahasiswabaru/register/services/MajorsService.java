@@ -58,4 +58,26 @@ public class MajorsService {
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(resp);
     }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Get major by id")
+    public ResponseEntity<Object> getMajorById(Integer majorId){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Majors majors = majorsRepository.findMajorsById(majorId);
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(majors);
+    }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Get major by name")
+    public ResponseEntity<Object> getMajorByName(String majorName){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Majors majors = majorsRepository.findMajorsByName(majorName);
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(majors);
+    }
 }
