@@ -23,12 +23,12 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Audit<T> {
     @Column(name = "created_at", updatable = false)
-    @Temporal(TIMESTAMP)
+//    @Temporal(TIMESTAMP)
     @CreatedDate
     protected LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @Temporal(TIMESTAMP)
+//    @Temporal(TIMESTAMP)
     @LastModifiedDate
     protected LocalDateTime updatedAt;
 }
