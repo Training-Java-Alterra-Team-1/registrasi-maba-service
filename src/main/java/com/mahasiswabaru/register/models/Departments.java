@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity(name="Majors")
-@Table(name="majors")
+@Entity(name="Departments")
+@Table(name="departments")
 @Setter
 @Getter
 @AllArgsConstructor
