@@ -80,4 +80,30 @@ public class StudentsService {
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(students);
     }
+
+    @SneakyThrows(Exception.class)
+    @ApiOperation("Update data student")
+    public ResponseEntity<Object> updateStudentById(Integer studentId, StudentsDto studentReq){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Students students = studentsRepository.findStudentsById(studentId);
+        if(studentReq.getStudentDob() != null)
+            students.setDob(studentReq.getStudentDob());
+        if(studentReq.getStudentAddress() != null && studentReq.getStudentAddress() != "")
+            students.setAddress(studentReq.getStudentAddress());
+        if(studentReq.getStudentName() != null && studentReq.getStudentName() != "")
+            students.setName(studentReq.getStudentName());
+        if(studentReq.getStudentGender() != null && studentReq.getStudentGender() != "")
+            students.setGender(studentReq.getStudentGender());
+        if(studentReq.getMajorId() != null){
+            Majors major = new Majors();
+            major.setId(studentReq.getMajorId());
+            students.setMajors(major);
+        }
+
+        studentsRepository.save(students);
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(studentReq);
+    }
 }

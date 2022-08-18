@@ -18,22 +18,29 @@ public class StudentsController {
 
     @SneakyThrows(Exception.class)
     @PostMapping(path = "/mahasiswa/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> registerNewStudent(StudentsDto studentRequest){
-        log.info("api /api/v1/mahasiswa/register is hit.");
+    public ResponseEntity<Object> registerNewStudent(@RequestBody StudentsDto studentRequest){
+        log.info("api POST /api/v1/mahasiswa/register is hit.");
         return studentsService.addStudent(studentRequest);
     }
 
     @SneakyThrows(Exception.class)
     @GetMapping(path = "/mahasiswa", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllStudent(){
-        log.info("api /api/v1/mahasiswa is hit.");
+        log.info("api GET /api/v1/mahasiswa is hit.");
         return studentsService.getStudents();
     }
 
     @SneakyThrows(Exception.class)
     @GetMapping(path = "/mahasiswa/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getStudentById(@PathVariable Integer id){
-        log.info("api /api/v1/mahasiswa/{id} is hit.");
+        log.info("api GET /api/v1/mahasiswa/{id} is hit.");
         return studentsService.getStudentById(id);
+    }
+
+    @SneakyThrows(Exception.class)
+    @PutMapping(path = "/mahasiswa/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateStudentById(@PathVariable Integer id, @RequestBody StudentsDto studentReq){
+        log.info("api PUT /api/v1/mahasiswa/{id} is hit.");
+        return studentsService.updateStudentById(id, studentReq);
     }
 }
