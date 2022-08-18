@@ -55,7 +55,7 @@ public class DegreesService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Degrees degrees = degreesRepository.findDegreesByIdAndDeletedAtIsNull(degreeId);
+        Degrees degrees = degreesRepository.findDegreesById(degreeId);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(degrees);
     }
@@ -66,7 +66,7 @@ public class DegreesService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Degrees degrees = degreesRepository.findDegreesByNameAndDeletedAtIsNull(degreeName);
+        Degrees degrees = degreesRepository.findDegreesByName(degreeName);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(degrees);
     }
