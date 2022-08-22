@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:8
 EXPOSE 8081
-COPY target/register-0.0.1.jar register-0.0.1.jar
-ENTRYPOINT ["java", "-jar", "/register-0.0.1.jar"]
+COPY target/student-service.jar student-service.jar
+ENTRYPOINT ["java", "-jar", "/student-service.jar"]
