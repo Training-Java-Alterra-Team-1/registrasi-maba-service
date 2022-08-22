@@ -27,62 +27,55 @@ public class CustomAuthorization extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (request.getServletPath().equals("/api/v1/login") || request.getServletPath().equals("/api/v1/refresh-token") || request.getServletPath().equals("/swagger-ui/**")){
+        String authorizationHeader = request.getHeader("Authorization");
 
-            filterChain.doFilter(request, response);
+        if (Optional.ofNullable(authorizationHeader).isPresent() && authorizationHeader.startsWith("Bearer ")) {
 
-        } else {
+            try {
 
-            String authorizationHeader = request.getHeader("Authorization");
+                String token = authorizationHeader.substring("Bearer ".length());
 
-            if (Optional.ofNullable(authorizationHeader).isPresent() && authorizationHeader.startsWith("Bearer ")) {
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
-                try {
+                JWTVerifier verifier = JWT.require(algorithm).build();
 
-                    String token = authorizationHeader.substring("Bearer ".length());
+                DecodedJWT decodedJWT = verifier.verify(token);
 
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                String username = decodedJWT.getSubject();
 
-                    JWTVerifier verifier = JWT.require(algorithm).build();
+                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
-                    DecodedJWT decodedJWT = verifier.verify(token);
+                Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
 
-                    String username = decodedJWT.getSubject();
+                Arrays.asList(roles).forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                });
 
-                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities);
 
-                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-
-                    Arrays.asList(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
-
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            username, null, authorities);
-
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-                    filterChain.doFilter(request, response);
-
-                } catch (Exception e) {
-                    log.error("Error logging in {}", e.getMessage());
-
-                    Map<String, Object> error = new HashMap<String, Object>();
-
-                    response.setHeader("error", e.getMessage());
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-                    error.put("error", e.getMessage());
-
-                    new ObjectMapper().writeValue(response.getOutputStream(), error);
-                }
-
-            } else {
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
                 filterChain.doFilter(request, response);
 
+            } catch (Exception e) {
+                log.error("Error logging in {}", e.getMessage());
+
+                Map<String, Object> error = new HashMap<String, Object>();
+
+                response.setHeader("error", e.getMessage());
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+                error.put("error", e.getMessage());
+
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
+
+        } else {
+
+            filterChain.doFilter(request, response);
+
         }
     }
 }
