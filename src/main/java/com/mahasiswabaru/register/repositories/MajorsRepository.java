@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface MajorsRepository extends JpaRepository<Majors, Long> {
     Majors findMajorsById(Integer majorId);
     Majors findMajorsByName(String majorName);
+    Majors findMajorsByNameAndDepartmentsIdAndDegreesId(String majorName, Integer depId, Integer degId);
 }
