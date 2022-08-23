@@ -6,9 +6,11 @@ import com.mahasiswabaru.register.dto.MajorsDto;
 import com.mahasiswabaru.register.services.DegreesService;
 import com.mahasiswabaru.register.services.DepartmentsService;
 import com.mahasiswabaru.register.services.MajorsService;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,14 +18,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @SpringBootApplication
 @EnableJpaAuditing
+@EnableEncryptableProperties
+@EnableEurekaClient
 public class RegisterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RegisterApplication.class, args);
 	}
-//	unmark these comments below to add initial data to the database
-//	@Bean
-//	public CommandLineRunner run(DegreesService degreesService, DepartmentsService departmentsService, MajorsService majorsService){
-//		return args ->{
+
+	@Bean
+	public CommandLineRunner run(DegreesService degreesService, DepartmentsService departmentsService, MajorsService majorsService){
+		return args ->{
 //			degreesService.addDegree(new DegreesDto("S1"));
 //			degreesService.addDegree(new DegreesDto("S2"));
 //			degreesService.addDegree(new DegreesDto("S3"));
@@ -67,6 +71,6 @@ public class RegisterApplication {
 //			majorsService.addMajor(new MajorsDto("Industrial Engineering", 1, 1));
 //			majorsService.addMajor(new MajorsDto("Industrial Engineering", 1, 2));
 //			majorsService.addMajor(new MajorsDto("Industrial Engineering", 1, 3));
-//		};
-//	}
+		};
+	}
 }
