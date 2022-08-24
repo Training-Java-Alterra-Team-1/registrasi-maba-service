@@ -48,7 +48,7 @@ public class MajorsService {
 
         majorsRepository.save(major);
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", major);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -62,7 +62,7 @@ public class MajorsService {
 
         List<Majors> majors = majorsRepository.findAll();
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", majors);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -77,12 +77,12 @@ public class MajorsService {
         Majors major = majorsRepository.findMajorsById(majorId);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(major).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", major);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
@@ -96,11 +96,13 @@ public class MajorsService {
         Majors major = majorsRepository.findMajorsByName(majorName);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(major).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
+        response.put("success", false);
+        response.put("data", major);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 }
