@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -32,20 +35,23 @@ public class MajorsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Majors theMajor = new Majors();
-        theMajor.setName(majorRequest.getMajorName());
+        Majors major = new Majors();
+        major.setName(majorRequest.getMajorName());
         Degrees theDegree = new Degrees();
         theDegree.setId(majorRequest.getDegreeId());
-        theMajor.setDegrees(theDegree);
+        major.setDegrees(theDegree);
         Departments theDepartment = new Departments();
         theDepartment.setId(majorRequest.getDepartmentId());
-        theMajor.setDepartments(theDepartment);
+        major.setDepartments(theDepartment);
         LocalDateTime todayDateTime = LocalDateTime.now();
-        theMajor.setCreatedAt(todayDateTime);
+        major.setCreatedAt(todayDateTime);
 
-        majorsRepository.save(theMajor);
+        majorsRepository.save(major);
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", major);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(theMajor);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -54,9 +60,12 @@ public class MajorsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        List<Majors> resp = majorsRepository.findAll();
+        List<Majors> majors = majorsRepository.findAll();
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", majors);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(resp);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -65,9 +74,17 @@ public class MajorsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Majors majors = majorsRepository.findMajorsById(majorId);
+        Majors major = majorsRepository.findMajorsById(majorId);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(major).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(majors);
+        response.put("message", "success");
+        response.put("data", major);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -76,8 +93,14 @@ public class MajorsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Majors majors = majorsRepository.findMajorsByName(majorName);
+        Majors major = majorsRepository.findMajorsByName(majorName);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(major).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(majors);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 }
