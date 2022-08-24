@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -28,14 +28,18 @@ public class DegreesService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Degrees theDegree = new Degrees();
-        theDegree.setName(degreeeRequest.getDegreeName());
+        Degrees degree = new Degrees();
+        degree.setName(degreeeRequest.getDegreeName());
         LocalDateTime todayDateTime = LocalDateTime.now();
-        theDegree.setCreatedAt(todayDateTime);
+        degree.setCreatedAt(todayDateTime);
 
-        degreesRepository.save(theDegree);
+        degreesRepository.save(degree);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(theDegree);
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", degree);
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -44,9 +48,12 @@ public class DegreesService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        List<Degrees> respon = degreesRepository.findAll();
+        List<Degrees> degrees = degreesRepository.findAll();
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", degrees);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(respon);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -55,19 +62,36 @@ public class DegreesService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Degrees degrees = degreesRepository.findDegreesById(degreeId);
+        Degrees degree = degreesRepository.findDegreesById(degreeId);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(degrees);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(degree).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
+
+        response.put("message", "success");
+        response.put("data", degree);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
     @ApiOperation("Get degrees by name")
-    public ResponseEntity<Object> getDegreeById(String degreeName){
+    public ResponseEntity<Object> getDegreeByName(String degreeName){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Degrees degrees = degreesRepository.findDegreesByName(degreeName);
+        Degrees degree = degreesRepository.findDegreesByName(degreeName);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(degree).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(degrees);
+        response.put("message", "success");
+        response.put("data", degree);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 }

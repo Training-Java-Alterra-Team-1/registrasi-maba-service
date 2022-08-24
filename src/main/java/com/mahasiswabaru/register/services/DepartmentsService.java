@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -28,14 +30,17 @@ public class DepartmentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Departments theDepartment = new Departments();
-        theDepartment.setName(departmentRequest.getDepartmentName());
+        Departments department = new Departments();
+        department.setName(departmentRequest.getDepartmentName());
         LocalDateTime todayDateTime = LocalDateTime.now();
-        theDepartment.setCreatedAt(todayDateTime);
+        department.setCreatedAt(todayDateTime);
 
-        departmentsRepository.save(theDepartment);
+        departmentsRepository.save(department);
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", department);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(theDepartment);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -44,8 +49,11 @@ public class DepartmentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        List<Departments> resp = departmentsRepository.findAll();
+        List<Departments> departments = departmentsRepository.findAll();
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", departments);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(resp);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 }

@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -32,20 +35,23 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Students students = new Students();
-        students.setAddress(studentReq.getStudentAddress());
-        students.setDob(studentReq.getStudentDob());
-        students.setName(studentReq.getStudentName());
-        students.setGender(studentReq.getStudentGender());
+        Students student = new Students();
+        student.setAddress(studentReq.getStudentAddress());
+        student.setDob(studentReq.getStudentDob());
+        student.setName(studentReq.getStudentName());
+        student.setGender(studentReq.getStudentGender());
 
-        Majors theMajor = new Majors();
-        theMajor = majorsRepository.findMajorsById(studentReq.getMajorId());
+        Majors major = new Majors();
+        major = majorsRepository.findMajorsById(studentReq.getMajorId());
 
-        students.setMajors(theMajor);
+        student.setMajors(major);
 
-        studentsRepository.save(students);
+        studentsRepository.save(student);
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", student);
 
-        return  ResponseEntity.status(HttpStatus.OK).headers(headers).body(studentReq);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -54,9 +60,12 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        List<Students> resp = studentsRepository.findAll();
+        List<Students> students = studentsRepository.findAll();
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("message", "success");
+        response.put("data", students);
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(resp);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -65,9 +74,17 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Students students = studentsRepository.findStudentsById(studentId);
+        Students student = studentsRepository.findStudentsById(studentId);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(student).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(students);
+        response.put("message", "success");
+        response.put("data", student);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -76,9 +93,17 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Students students = studentsRepository.findStudentsByName(studentName);
+        Students student = studentsRepository.findStudentsByName(studentName);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(student).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(students);
+        response.put("message", "success");
+        response.put("data", student);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 
     @SneakyThrows(Exception.class)
@@ -87,23 +112,31 @@ public class StudentsService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Students students = studentsRepository.findStudentsById(studentId);
+        Students student = studentsRepository.findStudentsById(studentId);
+        Map<String, Object> response = new HashMap<String, Object>();
+        if(!Optional.ofNullable(student).isPresent()) {
+            response.put("message", "failed");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
+        }
+
         if(studentReq.getStudentDob() != null)
-            students.setDob(studentReq.getStudentDob());
+            student.setDob(studentReq.getStudentDob());
         if(studentReq.getStudentAddress() != null && studentReq.getStudentAddress() != "")
-            students.setAddress(studentReq.getStudentAddress());
+            student.setAddress(studentReq.getStudentAddress());
         if(studentReq.getStudentName() != null && studentReq.getStudentName() != "")
-            students.setName(studentReq.getStudentName());
+            student.setName(studentReq.getStudentName());
         if(studentReq.getStudentGender() != null && studentReq.getStudentGender() != "")
-            students.setGender(studentReq.getStudentGender());
+            student.setGender(studentReq.getStudentGender());
         if(studentReq.getMajorId() != null){
             Majors major = new Majors();
             major.setId(studentReq.getMajorId());
-            students.setMajors(major);
+            student.setMajors(major);
         }
 
-        studentsRepository.save(students);
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(studentReq);
+        studentsRepository.save(student);
+        response.put("message", "success");
+        response.put("data", student);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 }

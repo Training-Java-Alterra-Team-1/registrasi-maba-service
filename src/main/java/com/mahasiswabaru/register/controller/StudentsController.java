@@ -38,7 +38,7 @@ public class StudentsController {
     }
 
     @SneakyThrows(Exception.class)
-    @PutMapping(path = "/mahasiswa/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/student/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateStudentById(@PathVariable Integer id, @RequestBody StudentsDto studentReq){
         log.info("api PUT /api/v1/student/{id} is hit.");
         return studentsService.updateStudentById(id, studentReq);
