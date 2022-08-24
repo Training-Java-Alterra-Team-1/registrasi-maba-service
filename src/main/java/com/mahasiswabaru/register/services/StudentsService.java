@@ -48,7 +48,7 @@ public class StudentsService {
 
         studentsRepository.save(student);
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", student);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -62,7 +62,7 @@ public class StudentsService {
 
         List<Students> students = studentsRepository.findAll();
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", students);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -77,12 +77,12 @@ public class StudentsService {
         Students student = studentsRepository.findStudentsById(studentId);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(student).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", student);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
@@ -96,12 +96,12 @@ public class StudentsService {
         Students student = studentsRepository.findStudentsByName(studentName);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(student).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", student);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
@@ -115,8 +115,8 @@ public class StudentsService {
         Students student = studentsRepository.findStudentsById(studentId);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(student).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
@@ -135,7 +135,7 @@ public class StudentsService {
         }
 
         studentsRepository.save(student);
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", student);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }

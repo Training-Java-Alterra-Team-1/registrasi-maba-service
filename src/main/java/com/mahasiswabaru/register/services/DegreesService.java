@@ -36,7 +36,7 @@ public class DegreesService {
         degreesRepository.save(degree);
 
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", degree);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -50,7 +50,7 @@ public class DegreesService {
 
         List<Degrees> degrees = degreesRepository.findAll();
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", degrees);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -66,12 +66,12 @@ public class DegreesService {
 
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(degree).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", degree);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
@@ -85,12 +85,12 @@ public class DegreesService {
         Degrees degree = degreesRepository.findDegreesByName(degreeName);
         Map<String, Object> response = new HashMap<String, Object>();
         if(!Optional.ofNullable(degree).isPresent()) {
-            response.put("message", "failed");
-            response.put("data", null);
+            response.put("success", false);
+            response.put("message", "Not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(headers).body(response);
         }
 
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", degree);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }

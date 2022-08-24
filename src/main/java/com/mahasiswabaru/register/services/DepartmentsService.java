@@ -37,7 +37,7 @@ public class DepartmentsService {
 
         departmentsRepository.save(department);
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", department);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
@@ -51,7 +51,7 @@ public class DepartmentsService {
 
         List<Departments> departments = departmentsRepository.findAll();
         Map<String, Object> response = new HashMap<String, Object>();
-        response.put("message", "success");
+        response.put("success", true);
         response.put("data", departments);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
